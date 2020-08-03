@@ -43,13 +43,13 @@ const createMainMenuStatisticTemplate = () => {
 };
 
 const createFilterTemplate = () => {
-   return (
-     `<ul class="sort">
+  return (
+    `<ul class="sort">
      <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
      <li><a href="#" class="sort__button">Sort by date</a></li>
      <li><a href="#" class="sort__button">Sort by rating</a></li>
    </ul>`
-   );
+  );
 };
 
 const createFilmsContainerTemplate = () => {
@@ -286,8 +286,6 @@ const createFilmDetailsTemplate = () => {
   );
 };
 
-
-
 render(createUserRatingTemplate(), siteHeader, `beforeend`);
 render(createMainMenuContainerTemplate(), siteMain, `beforeend`);
 
@@ -324,5 +322,4 @@ for (const extraFilmsContainer of extraFilmsContainers) {
 
 render(createFooterStatisticTemplate(), siteStatistic, `beforeend`);
 
-// render(createFilmDetailsTemplate(), siteBody, `beforeend`);
-
+render(createFilmDetailsTemplate(), siteBody, `beforeend`);
