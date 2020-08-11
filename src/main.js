@@ -11,8 +11,9 @@ import {createFilmsExtraTemplate} from "./view/films-extra";
 import {createFooterStatisticTemplate} from "./view/footer-statistic";
 import {createFilmDetailsTemplate} from "./view/film-details";
 
+import {films} from "./mock/film";
 
-const FILMS_COUNT = 5;
+const FILMS_COUNT_PER_STEP = 5;
 const EXTRA_FIELD_COUNT = 2;
 const EXTRA_FILMS_COUNT = 2;
 
@@ -41,11 +42,27 @@ render(createFilmsListTemplate(), filmsBoard, `beforeend`);
 
 const filmsListContainer = filmsBoard.querySelector(`.films-list__container`);
 
-for (let i = 0; i < FILMS_COUNT; i++) {
-  render(createFilmTemplate(), filmsListContainer, `beforeend`);
+for (let i = 1; i <= Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
+  render(createFilmTemplate(films[i]), filmsListContainer, `beforeend`);
 }
-render(createShowMoreButton(), filmsBoard, `beforeend`);
 
+if (films.length > FILMS_COUNT_PER_STEP) {
+  let filmCounter = FILMS_COUNT_PER_STEP;
+  render(createShowMoreButton(), filmsBoard, `beforeend`);
+
+  const showMoreButton = filmsBoard.querySelector(`.films-list__show-more`);
+  showMoreButton.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    films.slice(filmCounter, filmCounter + FILMS_COUNT_PER_STEP)
+    .forEach((film) => render(createFilmTemplate(film), filmsListContainer, `beforeend`));
+
+    filmCounter += FILMS_COUNT_PER_STEP;
+
+    if (filmCounter >= films.length) {
+      showMoreButton.remove();
+    }
+  });
+}
 for (let i = 0; i < EXTRA_FIELD_COUNT; i++) {
   render(createFilmsExtraTemplate(), filmsBoard, `beforeend`);
 }
@@ -54,10 +71,11 @@ const extraFilmsContainers = filmsBoard.querySelectorAll(`.films-list--extra .fi
 
 for (const extraFilmsContainer of extraFilmsContainers) {
   for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-    render(createFilmTemplate(), extraFilmsContainer, `beforeend`);
+    render(createFilmTemplate(films[i]), extraFilmsContainer, `beforeend`); // пока просто отображаются фильмы из списка
   }
 }
 
 render(createFooterStatisticTemplate(), siteStatistic, `beforeend`);
 
-render(createFilmDetailsTemplate(), siteBody, `beforeend`);
+// render(createFilmDetailsTemplate(), siteBody, `beforeend`);
+console.log(films);
