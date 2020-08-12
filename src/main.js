@@ -77,5 +77,5 @@ for (const extraFilmsContainer of extraFilmsContainers) {
 
 render(createFooterStatisticTemplate(), siteStatistic, `beforeend`);
 
-// render(createFilmDetailsTemplate(), siteBody, `beforeend`);
-console.log(films);
+render(createFilmDetailsTemplate(films[0]), siteBody, `beforeend`);
+// console.log(films);

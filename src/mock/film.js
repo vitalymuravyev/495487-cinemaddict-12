@@ -1,5 +1,5 @@
 import {getRandom, getRandomInteger, generateRandomValue, getBoolean} from "../utils";
-import {sentences, TITLES, ACTIONS, POSTERS, EMOJIES, AUTHORS} from "../const";
+import {sentences, TITLES, ACTIONS, POSTERS, EMOJIES, AUTHORS, DIRECTORS, WRITERS, ACTORS, COUNTRIES} from "../const";
 
 const FILMS_COUNT = 17;
 
@@ -28,7 +28,7 @@ const getComment = () => {
   const comment = {
     post: sentences[getRandomInteger(sentences.length - 1)],
     author: generateRandomValue(AUTHORS),
-    date: ``, // random date one year from today
+    date: getRandomDate(),
     emoji: generateRandomValue(EMOJIES),
   };
 
@@ -59,6 +59,29 @@ const getRandomDate = () => {
   return currentDate;
 };
 
+const getRandomWriters = () => {
+  const writersCount = getRandomInteger(1, 2);
+
+  let writers = Array(writersCount).fill().map(() => generateRandomValue(WRITERS));
+  return writers;
+
+};
+
+const getRandomActors = () => {
+  const actorsCount = getRandomInteger(3, 5);
+
+  const actors = Array(actorsCount).fill().map(() => generateRandomValue(ACTORS));
+  return actors;
+};
+
+const getRandomGenres = () => {
+  const genresCount = getRandomInteger(1, 3);
+
+  const genres = Array(genresCount).fill().map(() => generateRandomValue(ACTIONS));
+
+  return genres;
+};
+
 const generateFilm = () => {
   const title = generateRandomValue(TITLES);
   const realiseDate = getRandomDate();
@@ -67,16 +90,16 @@ const generateFilm = () => {
     title,
     originalTitle: title.toUpperCase(),
     rating: getRandom(10).toFixed(1),
-    director: ``,
-    writers: ``,
-    actors: ``,
+    director: generateRandomValue(DIRECTORS),
+    writers: getRandomWriters(),
+    actors: getRandomActors(),
     duration: getRandomDuration(),
-    country: ``,
-    genre: generateRandomValue(ACTIONS),
-    ageRating: ``,
+    country: generateRandomValue(COUNTRIES),
+    genre: getRandomGenres(),
+    ageRating: getRandomInteger(5, 18),
     realiseDate,
     realiseYear: realiseDate.getFullYear(),
-    description: getRandomDescription(), // 140 simbols
+    description: getRandomDescription(),
     comments: getComments(),
     isInWatchList: getBoolean(),
     isWatched: getBoolean(),
