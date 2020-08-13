@@ -12,10 +12,13 @@ import {createFooterStatisticTemplate} from "./view/footer-statistic";
 import {createFilmDetailsTemplate} from "./view/film-details";
 
 import {films} from "./mock/film";
+import {generateFilters} from "./mock/filter";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRA_FIELD_COUNT = 2;
 const EXTRA_FILMS_COUNT = 2;
+
+const filters = generateFilters(films);
 
 const siteBody = document.querySelector(`body`);
 const siteHeader = siteBody.querySelector(`.header`);
@@ -26,12 +29,12 @@ const render = (template, container, position) => {
   container.insertAdjacentHTML(position, template);
 };
 
-render(createUserRatingTemplate(), siteHeader, `beforeend`);
+render(createUserRatingTemplate(filters), siteHeader, `beforeend`);
 render(createMainMenuContainerTemplate(), siteMain, `beforeend`);
 
 const siteMainMenu = siteMain.querySelector(`.main-navigation`);
 
-render(createMainMenuTemplate(), siteMainMenu, `beforeend`);
+render(createMainMenuTemplate(filters), siteMainMenu, `beforeend`);
 render(createMainMenuStatisticTemplate(), siteMainMenu, `beforeend`);
 render(createFilterTemplate(), siteMain, `beforeend`);
 render(createFilmsContainerTemplate(), siteMain, `beforeend`);
@@ -78,4 +81,3 @@ for (const extraFilmsContainer of extraFilmsContainers) {
 render(createFooterStatisticTemplate(), siteStatistic, `beforeend`);
 
 render(createFilmDetailsTemplate(films[0]), siteBody, `beforeend`);
-// console.log(films);
