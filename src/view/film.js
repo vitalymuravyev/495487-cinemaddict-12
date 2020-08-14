@@ -1,8 +1,6 @@
 const MAX_LENGTH = 140;
 
-const addClassName = (property) => {
-  return property ? `film-card__controls-item--active` : ``;
-};
+const addClassName = (property) => property ? `film-card__controls-item--active` : ``;
 
 export const createFilmTemplate = (film) => {
   const {description, rating, title, realiseYear, duration, genre, comments, poster, isFavorite, isWatched, isInWatchList} = film;

@@ -1,28 +1,33 @@
-
-const userRatingItemTemplate = (count) => {
+const getUserRating = (count) => {
+  const levelsLowLine = {
+    NOVICE: 1,
+    FAN: 11,
+    MOVIE_BUFF: 21,
+  };
   let rating = ``;
 
-  if (count >= 1 && count <= 10) {
+  if (count >= levelsLowLine.NOVICE && count < levelsLowLine.FAN) {
     rating = `Novice`;
   }
-  if (count >= 11 && count <= 20) {
+  if (count >= levelsLowLine.FAN && count < levelsLowLine.MOVIE_BUFF) {
     rating = `Fan`;
   }
-  if (count > 20) {
+  if (count >= levelsLowLine.MOVIE_BUFF) {
     rating = `Movie Buff`;
   }
 
-  return `<p class="profile__rating">${rating}</p>`;
+  return rating;
 };
 
-export const createUserRatingTemplate = (filters) => {
-  let count;
-  for (const filter of filters) {
-    if (filter.name === `history`) {
-      count = filter.count;
-    }
-  }
-  const userRating = userRatingItemTemplate(count);
+const createUserRatingItemTemplate = (count) => {
+  const ratingLevel = getUserRating(count);
+
+  return `<p class="profile__rating">${ratingLevel}</p>`;
+};
+
+export const createUserRatingTemplate = (count) => {
+  const userRating = createUserRatingItemTemplate(count);
+
   return (
     `<section class="header__profile profile">
       ${userRating}

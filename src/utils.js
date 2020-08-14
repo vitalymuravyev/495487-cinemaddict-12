@@ -11,10 +11,6 @@ export const getRandomInteger = (a, b = 0) => {
   return Math.floor(low + Math.random() * (max - low + 1));
 };
 
-export const generateRandomValue = (arr) => {
-  return arr[getRandomInteger(0, arr.length - 1)];
-};
+export const generateRandomItem = (arr) => arr[getRandomInteger(0, arr.length - 1)];
 
-export const getBoolean = () => {
-  return Boolean(getRandomInteger(0, 1));
-};
+export const getRandomBoolean = () => Boolean(getRandomInteger(0, 1));

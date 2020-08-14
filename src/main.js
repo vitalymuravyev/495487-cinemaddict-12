@@ -11,14 +11,17 @@ import {createFilmsExtraTemplate} from "./view/films-extra";
 import {createFooterStatisticTemplate} from "./view/footer-statistic";
 import {createFilmDetailsTemplate} from "./view/film-details";
 
-import {films} from "./mock/film";
+import {generateFilms} from "./mock/film";
 import {generateFilters} from "./mock/filter";
 
+const FILMS_COUNT = 17;
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRA_FIELD_COUNT = 2;
 const EXTRA_FILMS_COUNT = 2;
 
+const films = generateFilms(FILMS_COUNT);
 const filters = generateFilters(films);
+const watchedFilmsCount = filters.find((item) => item.name === `history`).count;
 
 const siteBody = document.querySelector(`body`);
 const siteHeader = siteBody.querySelector(`.header`);
@@ -29,7 +32,7 @@ const render = (template, container, position) => {
   container.insertAdjacentHTML(position, template);
 };
 
-render(createUserRatingTemplate(filters), siteHeader, `beforeend`);
+render(createUserRatingTemplate(watchedFilmsCount), siteHeader, `beforeend`);
 render(createMainMenuContainerTemplate(), siteMain, `beforeend`);
 
 const siteMainMenu = siteMain.querySelector(`.main-navigation`);

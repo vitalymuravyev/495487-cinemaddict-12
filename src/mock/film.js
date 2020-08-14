@@ -1,16 +1,17 @@
-import {getRandom, getRandomInteger, generateRandomValue, getBoolean} from "../utils";
-import {sentences, TITLES, ACTIONS, POSTERS, EMOJIES, AUTHORS, DIRECTORS, WRITERS, ACTORS, COUNTRIES} from "../const";
-
-const FILMS_COUNT = 17;
+import {getRandom, getRandomInteger, generateRandomItem, getRandomBoolean} from "../utils";
+import {SENTENCES, TITLES, ACTIONS, POSTERS, EMOJIES, AUTHORS, DIRECTORS, WRITERS, ACTORS, COUNTRIES} from "../const";
 
 
 const getRandomDuration = () => {
-  const MIN_DURATION = 50;
-  const MAX_DURATION = 100;
+  const minutesInHour = 60;
+  const Duration = {
+    MIN: 50,
+    MAX: 100,
+  };
 
-  const duration = getRandomInteger(MIN_DURATION, MAX_DURATION);
+  const duration = getRandomInteger(Duration.MIN, Duration.MAX);
 
-  return duration >= 60 ? `${Math.trunc(duration / 60)}h ${duration % 60}m` : `${duration}m`;
+  return duration >= minutesInHour ? `${Math.trunc(duration / minutesInHour)}h ${duration % minutesInHour}m` : `${duration}m`;
 };
 
 const getRandomDescription = () => {
@@ -18,22 +19,18 @@ const getRandomDescription = () => {
   const sentenceCount = getRandomInteger(1, MAX_SENTENCE);
   let description = ``;
   for (let i = 0; i < sentenceCount; i++) {
-    const randomSentence = sentences[getRandomInteger(sentences.length - 1)];
+    const randomSentence = SENTENCES[getRandomInteger(SENTENCES.length - 1)];
     description += ` ${randomSentence}.`.trim();
   }
   return description;
 };
 
-const getComment = () => {
-  const comment = {
-    post: sentences[getRandomInteger(sentences.length - 1)],
-    author: generateRandomValue(AUTHORS),
-    date: getRandomDate(),
-    emoji: generateRandomValue(EMOJIES),
-  };
-
-  return comment;
-};
+const getComment = () => ({
+  post: SENTENCES[getRandomInteger(SENTENCES.length - 1)],
+  author: generateRandomItem(AUTHORS),
+  date: getRandomDate(),
+  emoji: generateRandomItem(EMOJIES),
+});
 
 const getComments = () => {
   const MAX_COMMENTS_COUNT = 5;
@@ -60,52 +57,61 @@ const getRandomDate = () => {
 };
 
 const getRandomWriters = () => {
-  const writersCount = getRandomInteger(1, 2);
+  const WritersCount = {
+    MIN: 1,
+    MAX: 2,
+  };
 
-  let writers = Array(writersCount).fill().map(() => generateRandomValue(WRITERS));
-  return writers;
+  const writersCount = getRandomInteger(WritersCount.MIN, WritersCount.MAX);
+
+  return Array(writersCount).fill(``).map(() => generateRandomItem(WRITERS));
 
 };
 
 const getRandomActors = () => {
-  const actorsCount = getRandomInteger(3, 5);
+  const ActorsCount = {
+    MIN: 3,
+    MAX: 5,
+  };
+  const actorsCount = getRandomInteger(ActorsCount.MIN, ActorsCount.MAX);
 
-  const actors = Array(actorsCount).fill().map(() => generateRandomValue(ACTORS));
-  return actors;
+  return Array(actorsCount).fill(``).map(() => generateRandomItem(ACTORS));
 };
 
 const getRandomGenres = () => {
-  const genresCount = getRandomInteger(1, 3);
+  const GenresCount = {
+    MIN: 1,
+    MAX: 3,
+  };
+  const genresCount = getRandomInteger(GenresCount.MIN, GenresCount.MAX);
 
-  const genres = Array(genresCount).fill().map(() => generateRandomValue(ACTIONS));
-
-  return genres;
+  return Array(genresCount).fill(``).map(() => generateRandomItem(ACTIONS));
 };
 
 const generateFilm = () => {
-  const title = generateRandomValue(TITLES);
+  const title = generateRandomItem(TITLES);
   const realiseDate = getRandomDate();
   return {
-    poster: generateRandomValue(POSTERS),
+    poster: generateRandomItem(POSTERS),
     title,
     originalTitle: title.toUpperCase(),
     rating: getRandom(10).toFixed(1),
-    director: generateRandomValue(DIRECTORS),
+    director: generateRandomItem(DIRECTORS),
     writers: getRandomWriters(),
     actors: getRandomActors(),
     duration: getRandomDuration(),
-    country: generateRandomValue(COUNTRIES),
+    country: generateRandomItem(COUNTRIES),
     genre: getRandomGenres(),
     ageRating: getRandomInteger(5, 18),
     realiseDate,
     realiseYear: realiseDate.getFullYear(),
     description: getRandomDescription(),
     comments: getComments(),
-    isInWatchList: getBoolean(),
-    isWatched: getBoolean(),
-    isFavorite: getBoolean(),
+    isInWatchList: getRandomBoolean(),
+    isWatched: getRandomBoolean(),
+    isFavorite: getRandomBoolean(),
   };
 
 };
 
-export const films = Array(FILMS_COUNT).fill().map(generateFilm);
+export const generateFilms = (filmsCount) => Array(filmsCount).fill(``).map(generateFilm);

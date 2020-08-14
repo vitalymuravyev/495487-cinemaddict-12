@@ -1,16 +1,9 @@
-const createGenreItemTemplate = (genre) => {
-  return (
-    `<span class="film-details__genre">${genre}</span>`
-  );
-};
+const createGenreItemTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
 
-const addChecked = (property) => {
-  return property ? `checked` : ``;
-};
+const addChecked = (property) => property ? `checked` : ``;
 
-const createCommemntItemTemplate = (comment) => {
-  const {post, author, date, emoji} = comment;
-  const formatedDate = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+const createCommentItemTemplate = ({post, author, date, emoji}) => {
+  const formattedDate = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
   return (
     `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
@@ -20,7 +13,7 @@ const createCommemntItemTemplate = (comment) => {
         <p class="film-details__comment-text">${post}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${formatedDate}</span>
+          <span class="film-details__comment-day">${formattedDate}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -38,7 +31,7 @@ export const createFilmDetailsTemplate = (film) => {
   const watchListChecked = addChecked(isInWatchList);
   const watchedChecked = addChecked(isWatched);
   const favoriteChecked = addChecked(isFavorite);
-  const commentsItemsTemplate = comments.map((comment) => createCommemntItemTemplate(comment)).join(``);
+  const commentsItemsTemplate = comments.map((comment) => createCommentItemTemplate(comment)).join(``);
 
   return (
     `<section class="film-details">

@@ -6,10 +6,8 @@ const filmFilters = {
 };
 
 export const generateFilters = (films) => {
-  return Object.entries(filmFilters).map(([filterName, filmsCount]) => {
-    return {
-      name: filterName,
-      count: filmsCount(films),
-    };
-  });
+  return Object.entries(filmFilters).map(([filterName, filmsCount]) => ({
+    name: filterName,
+    count: filmsCount(films),
+  }));
 };
