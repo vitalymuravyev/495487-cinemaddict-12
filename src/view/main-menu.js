@@ -1,10 +1,25 @@
-export const createMainMenuTemplate = () => {
+const createCountTemplate = (name, count) => {
+  return name !== `all` ? `<span class="main-navigation__item-count">${count}</span>` : ``;
+};
+
+const createMenuFilterTemplate = ({name, count}, isActive) => {
+
+  const activeFilterClassName = isActive ? `main-navigation__item--active` : ``;
+  const formattedName = name[0].toUpperCase() + name.slice(1).toLowerCase();
+
+  return (
+    `<a href="#watchlist" class="main-navigation__item ${activeFilterClassName}">
+      ${formattedName}
+      ${createCountTemplate(name, count)}
+    </a>`
+  );
+};
+
+export const createMainMenuTemplate = (filters) => {
+  const menuFilterTemplate = filters.map((filter, index) => createMenuFilterTemplate(filter, index === 0)).join(``);
   return (
     `<div class="main-navigation__items">
-      <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-      <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
-      <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
-      <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
+      ${menuFilterTemplate}
     </div>`
   );
 };
