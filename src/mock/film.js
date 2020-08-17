@@ -1,40 +1,52 @@
 import {getRandom, getRandomInteger, generateRandomItem, getRandomBoolean} from "../utils";
 import {SENTENCES, TITLES, ACTIONS, POSTERS, EMOJIES, AUTHORS, DIRECTORS, WRITERS, ACTORS, COUNTRIES} from "../const";
 
+const MINUTES_IN_HOUR = 60;
+const MAX_SENTENCE = 5;
+const MAX_COMMENTS_COUNT = 5;
+const MAX_DATE_GAP = 25550;
+
+const Duration = {
+  MIN: 50,
+  MAX: 100,
+};
+const WritersCount = {
+  MIN: 1,
+  MAX: 2,
+};
+const ActorsCount = {
+  MIN: 3,
+  MAX: 5,
+};
+const GenresCount = {
+  MIN: 1,
+  MAX: 3,
+};
 
 const getRandomDuration = () => {
-  const minutesInHour = 60;
-  const Duration = {
-    MIN: 50,
-    MAX: 100,
-  };
-
   const duration = getRandomInteger(Duration.MIN, Duration.MAX);
 
-  return duration >= minutesInHour ? `${Math.trunc(duration / minutesInHour)}h ${duration % minutesInHour}m` : `${duration}m`;
+  return duration >= MINUTES_IN_HOUR ? `${Math.trunc(duration / MINUTES_IN_HOUR)}h ${duration % MINUTES_IN_HOUR}m` : `${duration}m`;
 };
 
 const getRandomDescription = () => {
-  const MAX_SENTENCE = 5;
   const sentenceCount = getRandomInteger(1, MAX_SENTENCE);
   let description = ``;
   for (let i = 0; i < sentenceCount; i++) {
-    const randomSentence = SENTENCES[getRandomInteger(SENTENCES.length - 1)];
+    const randomSentence = generateRandomItem(SENTENCES);
     description += ` ${randomSentence}.`.trim();
   }
   return description;
 };
 
 const getComment = () => ({
-  post: SENTENCES[getRandomInteger(SENTENCES.length - 1)],
+  post: generateRandomItem(SENTENCES),
   author: generateRandomItem(AUTHORS),
   date: getRandomDate(),
   emoji: generateRandomItem(EMOJIES),
 });
 
 const getComments = () => {
-  const MAX_COMMENTS_COUNT = 5;
-
   const commentsCount = getRandomInteger(MAX_COMMENTS_COUNT);
   const comments = [];
 
@@ -46,8 +58,6 @@ const getComments = () => {
 };
 
 const getRandomDate = () => {
-  const MAX_DATE_GAP = 25550;
-
   const dateGap = getRandomInteger(MAX_DATE_GAP);
   const currentDate = new Date();
 
@@ -57,11 +67,6 @@ const getRandomDate = () => {
 };
 
 const getRandomWriters = () => {
-  const WritersCount = {
-    MIN: 1,
-    MAX: 2,
-  };
-
   const writersCount = getRandomInteger(WritersCount.MIN, WritersCount.MAX);
 
   return Array(writersCount).fill(``).map(() => generateRandomItem(WRITERS));
@@ -69,20 +74,12 @@ const getRandomWriters = () => {
 };
 
 const getRandomActors = () => {
-  const ActorsCount = {
-    MIN: 3,
-    MAX: 5,
-  };
   const actorsCount = getRandomInteger(ActorsCount.MIN, ActorsCount.MAX);
 
   return Array(actorsCount).fill(``).map(() => generateRandomItem(ACTORS));
 };
 
 const getRandomGenres = () => {
-  const GenresCount = {
-    MIN: 1,
-    MAX: 3,
-  };
   const genresCount = getRandomInteger(GenresCount.MIN, GenresCount.MAX);
 
   return Array(genresCount).fill(``).map(() => generateRandomItem(ACTIONS));
