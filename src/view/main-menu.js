@@ -17,15 +17,6 @@ const createMenuFilterTemplate = ({name, count}, isActive) => {
   );
 };
 
-// export const createMainMenuTemplate = (filters) => {
-//   const menuFilterTemplate = filters.map((filter, index) => createMenuFilterTemplate(filter, index === 0)).join(``);
-//   return (
-//     `<div class="main-navigation__items">
-//       ${menuFilterTemplate}
-//     </div>`
-//   );
-// };
-
 export default class MainMenu {
   constructor(filters) {
     this._element = null;

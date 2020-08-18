@@ -30,6 +30,25 @@ const siteHeader = siteBody.querySelector(`.header`);
 const siteMain = siteBody.querySelector(`.main`);
 const siteStatistic = siteBody.querySelector(`.footer__statistics`);
 
+const renderFilm = (film) => {
+  const filmComponent = new FilmView(film);
+  const filmInfoComponent = new FilmInfoView(film);
+
+  const openPopup = () => {
+    siteBody.appendChild(filmInfoComponent.element);
+  };
+
+  renderElement(filmComponent.element, filmsListContainer, RenderPosition.BEFORE_END);
+
+  filmComponent.element.querySelector(`.film-card__poster`).addEventListener(`click`, openPopup);
+  filmComponent.element.querySelector(`.film-card__title`).addEventListener(`click`, openPopup);
+  filmComponent.element.querySelector(`.film-card__comments`).addEventListener(`click`, openPopup);
+
+  filmInfoComponent.element.querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
+    siteBody.removeChild(filmInfoComponent.element);
+  });
+};
+
 renderElement(new UserRatingView(watchedFilmsCount).element, siteHeader, RenderPosition.BEFORE_END);
 
 const mainContainerComponent = new MenuContainerView();
@@ -48,7 +67,7 @@ renderElement(filmsListComponent.element, filmsContainerComponent.element, Rende
 const filmsListContainer = filmsContainerComponent.element.querySelector(`.films-list__container`);
 
 for (let i = 0; i < Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
-  renderElement(new FilmView(films[i]).element, filmsListContainer, RenderPosition.BEFORE_END);
+  renderFilm(films[i]);
 }
 
 if (films.length > FILMS_COUNT_PER_STEP) {
@@ -60,7 +79,7 @@ if (films.length > FILMS_COUNT_PER_STEP) {
   showMoreButtonComponent.element.addEventListener(`click`, (evt) => {
     evt.preventDefault();
     films.slice(filmCounter, filmCounter + FILMS_COUNT_PER_STEP)
-    .forEach((film) => renderElement(new FilmView(film).element, filmsListContainer, RenderPosition.BEFORE_END));
+    .forEach((film) => renderFilm(film));
 
     filmCounter += FILMS_COUNT_PER_STEP;
 
