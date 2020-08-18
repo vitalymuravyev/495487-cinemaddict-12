@@ -1,23 +1,25 @@
+import {renderTemplate, RenderPosition, renderElement} from "./utils";
+
 import {createUserRatingTemplate} from "./view/user-rating";
-import {createMainMenuContainerTemplate} from "./view/menu-container";
+import MenuContainerView from "./view/menu-container";
 import {createMainMenuTemplate} from "./view/main-menu";
-import {createMainMenuStatisticTemplate} from "./view/menu-statistic";
-import {createFilterTemplate} from "./view/filter";
-import {createFilmsContainerTemplate} from "./view/films-container";
-import {createFilmsListTemplate} from "./view/films-list";
+import MainMenuStatisticView from "./view/menu-statistic";
+import SortView from "./view/sort";
+import FilmsContainerView from "./view/films-container";
+import FilmsListView from "./view/films-list";
 import {createFilmTemplate} from "./view/film";
-import {createShowMoreButton} from "./view/show-more-button";
-import {createFilmsExtraTemplate} from "./view/films-extra";
-import {createFooterStatisticTemplate} from "./view/footer-statistic";
-import {createFilmDetailsTemplate} from "./view/film-details";
+import ShowMoreButtonView from "./view/show-more-button";
+// import {createFilmsExtraTemplate} from "./view/films-extra";
+import FooterStatisticView from "./view/footer-statistic";
+// import {createFilmDetailsTemplate} from "./view/film-details";
 
 import {generateFilms} from "./mock/film";
 import {generateFilters} from "./mock/filter";
 
 const FILMS_COUNT = 17;
 const FILMS_COUNT_PER_STEP = 5;
-const EXTRA_FIELD_COUNT = 2;
-const EXTRA_FILMS_COUNT = 2;
+// const EXTRA_FIELD_COUNT = 2;
+// const EXTRA_FILMS_COUNT = 2;
 
 const films = generateFilms(FILMS_COUNT);
 const filters = generateFilters(films);
@@ -28,59 +30,59 @@ const siteHeader = siteBody.querySelector(`.header`);
 const siteMain = siteBody.querySelector(`.main`);
 const siteStatistic = siteBody.querySelector(`.footer__statistics`);
 
-const render = (template, container, position) => {
-  container.insertAdjacentHTML(position, template);
-};
+renderTemplate(createUserRatingTemplate(watchedFilmsCount), siteHeader, `beforeend`);
 
-render(createUserRatingTemplate(watchedFilmsCount), siteHeader, `beforeend`);
-render(createMainMenuContainerTemplate(), siteMain, `beforeend`);
+const mainContainerComponent = new MenuContainerView();
+renderElement(mainContainerComponent.element, siteMain, RenderPosition.BEFORE_END);
 
-const siteMainMenu = siteMain.querySelector(`.main-navigation`);
+renderTemplate(createMainMenuTemplate(filters), mainContainerComponent.element, `beforeend`);
+renderElement(new MainMenuStatisticView().element, mainContainerComponent.element, RenderPosition.BEFORE_END);
+renderElement(new SortView().element, siteMain, RenderPosition.BEFORE_END);
 
-render(createMainMenuTemplate(filters), siteMainMenu, `beforeend`);
-render(createMainMenuStatisticTemplate(), siteMainMenu, `beforeend`);
-render(createFilterTemplate(), siteMain, `beforeend`);
-render(createFilmsContainerTemplate(), siteMain, `beforeend`);
+const filmsContainerComponent = new FilmsContainerView();
+renderElement(filmsContainerComponent.element, siteMain, RenderPosition.BEFORE_END);
 
-const filmsBoard = siteMain.querySelector(`.films`);
+const filmsListComponent = new FilmsListView();
+renderElement(filmsListComponent.element, filmsContainerComponent.element, RenderPosition.BEFORE_END);
 
-render(createFilmsListTemplate(), filmsBoard, `beforeend`);
-
-const filmsListContainer = filmsBoard.querySelector(`.films-list__container`);
+const filmsListContainer = filmsContainerComponent.element.querySelector(`.films-list__container`);
 
 for (let i = 1; i <= Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
-  render(createFilmTemplate(films[i]), filmsListContainer, `beforeend`);
+  renderTemplate(createFilmTemplate(films[i]), filmsListContainer, `beforeend`);
 }
 
 if (films.length > FILMS_COUNT_PER_STEP) {
   let filmCounter = FILMS_COUNT_PER_STEP;
-  render(createShowMoreButton(), filmsBoard, `beforeend`);
 
-  const showMoreButton = filmsBoard.querySelector(`.films-list__show-more`);
-  showMoreButton.addEventListener(`click`, (evt) => {
+  const showMoreButtonComponent = new ShowMoreButtonView();
+  renderElement(showMoreButtonComponent.element, filmsContainerComponent.element, RenderPosition.BEFORE_END);
+
+  // const showMoreButton = filmsContainerComponent.element.querySelector(`.films-list__show-more`);
+  showMoreButtonComponent.element.addEventListener(`click`, (evt) => {
     evt.preventDefault();
     films.slice(filmCounter, filmCounter + FILMS_COUNT_PER_STEP)
-    .forEach((film) => render(createFilmTemplate(film), filmsListContainer, `beforeend`));
+    .forEach((film) => renderTemplate(createFilmTemplate(film), filmsListContainer, `beforeend`));
 
     filmCounter += FILMS_COUNT_PER_STEP;
 
     if (filmCounter >= films.length) {
-      showMoreButton.remove();
+      showMoreButtonComponent.element.remove();
+      showMoreButtonComponent.removeElement();
     }
   });
 }
-for (let i = 0; i < EXTRA_FIELD_COUNT; i++) {
-  render(createFilmsExtraTemplate(), filmsBoard, `beforeend`);
-}
+// for (let i = 0; i < EXTRA_FIELD_COUNT; i++) {
+//   renderTemplate(createFilmsExtraTemplate(), filmsBoard, `beforeend`);
+// }
 
-const extraFilmsContainers = filmsBoard.querySelectorAll(`.films-list--extra .films-list__container`);
+// const extraFilmsContainers = filmsBoard.querySelectorAll(`.films-list--extra .films-list__container`);
 
-for (const extraFilmsContainer of extraFilmsContainers) {
-  for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-    render(createFilmTemplate(films[i]), extraFilmsContainer, `beforeend`); // пока просто отображаются фильмы из списка
-  }
-}
+// for (const extraFilmsContainer of extraFilmsContainers) {
+//   for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
+//     renderTemplate(createFilmTemplate(films[i]), extraFilmsContainer, `beforeend`); // пока просто отображаются фильмы из списка
+//   }
+// }
 
-render(createFooterStatisticTemplate(), siteStatistic, `beforeend`);
+renderElement(new FooterStatisticView().element, siteStatistic, RenderPosition.BEFORE_END);
 
-render(createFilmDetailsTemplate(films[0]), siteBody, `beforeend`);
+// render(createFilmDetailsTemplate(films[0]), siteBody, `beforeend`);
