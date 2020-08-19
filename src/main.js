@@ -18,8 +18,9 @@ import {generateFilters} from "./mock/filter";
 
 const FILMS_COUNT = 17;
 const FILMS_COUNT_PER_STEP = 5;
-const EXTRA_FIELD_COUNT = 2;
 const EXTRA_FILMS_COUNT = 2;
+
+const extraFields = new Set([`Top rated`, `Most commented`]);
 
 const films = generateFilms(FILMS_COUNT);
 const filters = generateFilters(films);
@@ -30,19 +31,19 @@ const siteHeader = siteBody.querySelector(`.header`);
 const siteMain = siteBody.querySelector(`.main`);
 const siteStatistic = siteBody.querySelector(`.footer__statistics`);
 
-const renderFilm = (film) => {
+const renderFilm = (film, container) => {
   const filmComponent = new FilmView(film);
   const filmInfoComponent = new FilmInfoView(film);
 
-  const openPopup = () => {
+  const onFilmCardClick = () => {
     siteBody.appendChild(filmInfoComponent.element);
   };
 
-  renderElement(filmComponent.element, filmsListContainer, RenderPosition.BEFORE_END);
+  renderElement(filmComponent.element, container, RenderPosition.BEFORE_END);
 
-  filmComponent.element.querySelector(`.film-card__poster`).addEventListener(`click`, openPopup);
-  filmComponent.element.querySelector(`.film-card__title`).addEventListener(`click`, openPopup);
-  filmComponent.element.querySelector(`.film-card__comments`).addEventListener(`click`, openPopup);
+  filmComponent.element
+    .querySelectorAll(`.film-card__poster, .film-card__title, .film-card__comments`)
+    .forEach((filmCard) => filmCard.addEventListener(`click`, onFilmCardClick));
 
   filmInfoComponent.element.querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
     siteBody.removeChild(filmInfoComponent.element);
@@ -67,7 +68,7 @@ renderElement(filmsListComponent.element, filmsContainerComponent.element, Rende
 const filmsListContainer = filmsContainerComponent.element.querySelector(`.films-list__container`);
 
 for (let i = 0; i < Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
-  renderFilm(films[i]);
+  renderFilm(films[i], filmsListContainer);
 }
 
 if (films.length > FILMS_COUNT_PER_STEP) {
@@ -79,7 +80,7 @@ if (films.length > FILMS_COUNT_PER_STEP) {
   showMoreButtonComponent.element.addEventListener(`click`, (evt) => {
     evt.preventDefault();
     films.slice(filmCounter, filmCounter + FILMS_COUNT_PER_STEP)
-    .forEach((film) => renderFilm(film));
+    .forEach((film) => renderFilm(film, filmsListContainer));
 
     filmCounter += FILMS_COUNT_PER_STEP;
 
@@ -89,19 +90,18 @@ if (films.length > FILMS_COUNT_PER_STEP) {
     }
   });
 }
-for (let i = 0; i < EXTRA_FIELD_COUNT; i++) {
-  const filmsExtraComponent = new FilmsExtraView();
-  renderElement(filmsExtraComponent.element, filmsContainerComponent.element, `beforeend`);
-}
 
+for (const field of extraFields) {
+  const filmsExtraComponent = new FilmsExtraView(field);
+  renderElement(filmsExtraComponent.element, filmsContainerComponent.element, RenderPosition.BEFORE_END);
+}
 const extraFilmsContainers = filmsContainerComponent.element.querySelectorAll(`.films-list--extra .films-list__container`);
 
+// пока просто отображаются фильмы из списка
 for (const extraFilmsContainer of extraFilmsContainers) {
   for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-    renderElement(new FilmView(films[i]).element, extraFilmsContainer, RenderPosition.BEFORE_END); // пока просто отображаются фильмы из списка
+    renderFilm(films[i], extraFilmsContainer);
   }
 }
 
 renderElement(new FooterStatisticView().element, siteStatistic, RenderPosition.BEFORE_END);
-
-// renderElement(new FilmInfoView(films[0]).element, siteBody, RenderPosition.BEFORE_END);
