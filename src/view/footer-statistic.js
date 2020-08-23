@@ -2,21 +2,20 @@ import {createElement} from "../utils";
 
 
 export default class FooterStatistic {
-  constructor(films) {
+  constructor(filmsCount) {
     this._element = null;
-    this._films = films;
+    this._filmsCount = filmsCount;
   }
 
-  _getTemplate(films) {
-    const filmsCount = films.length;
+  _getTemplate() {
     return (
-      `<p>${filmsCount} movies inside</p>`
+      `<p>${this._filmsCount} movies inside</p>`
     );
   }
 
   get element() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate(this._films));
+      this._element = createElement(this._getTemplate());
     }
     return this._element;
   }

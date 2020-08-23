@@ -17,7 +17,7 @@ import NoFilmView from "./view/no_film";
 import {generateFilms} from "./mock/film";
 import {generateFilters} from "./mock/filter";
 
-const FILMS_COUNT = 0;
+const FILMS_COUNT = 23;
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRA_FILMS_COUNT = 2;
 
@@ -77,11 +77,11 @@ const renderFilmContainer = (movies, container) => {
   const extraFilmsContainers = filmsContainerComponent.element.querySelectorAll(`.films-list--extra .films-list__container`);
 
   // пока просто отображаются фильмы из списка
-  for (const extraFilmsContainer of extraFilmsContainers) {
+  extraFilmsContainers.forEach((extraFilmsContainer) => {
     for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
       renderFilm(movies[i], extraFilmsContainer);
     }
-  }
+  });
 };
 
 const renderFilm = (film, container) => {
@@ -122,4 +122,4 @@ renderElement(new SortView().element, siteMain, RenderPosition.BEFORE_END);
 
 renderFilmContainer(films, siteMain);
 
-renderElement(new FooterStatisticView(films).element, siteStatistic, RenderPosition.BEFORE_END);
+renderElement(new FooterStatisticView(films.length).element, siteStatistic, RenderPosition.BEFORE_END);
