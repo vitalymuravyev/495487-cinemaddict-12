@@ -1,9 +1,6 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract";
 
-export default class ShowMoreButton {
-  constructor() {
-    this._element = null;
-  }
+export default class ShowMoreButton extends AbstractView {
 
   _getTemplate() {
     return (
@@ -11,15 +8,4 @@ export default class ShowMoreButton {
     );
   }
 
-  get element() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
