@@ -1,16 +1,20 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract";
 
 const MAX_LENGTH = 140;
 
 const addClassName = (property) => property ? `film-card__controls-item--active` : ``;
 
-export default class Film {
+export default class Film extends AbstractView {
   constructor(film) {
-    this._element = null;
+    super();
     this._film = film;
   }
 
-  _getTemplate(film) {
+  _getTemplate() {
+    return this._createTemplate(this._film);
+  }
+
+  _createTemplate(film) {
     const {description, rating, title, realiseYear, duration, genre, comments, poster, isFavorite, isWatched, isInWatchList} = film;
     const shortDescription = description.length >= MAX_LENGTH ? description.slice(0, MAX_LENGTH - 2).concat(`...`) : description;
     const watchListClassName = addClassName(isInWatchList);
@@ -35,16 +39,5 @@ export default class Film {
         </form>
       </article>`
     );
-  }
-
-  get element() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate(this._film));
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

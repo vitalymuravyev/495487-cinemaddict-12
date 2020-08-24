@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract";
 
 const getUserRating = (count) => {
   const levelsLowLine = {
@@ -27,13 +27,17 @@ const createUserRatingItemTemplate = (count) => {
   return `<p class="profile__rating">${ratingLevel}</p>`;
 };
 
-export default class UserRating {
+export default class UserRating extends AbstractView {
   constructor(count) {
-    this._element = null;
+    super();
     this._count = count;
   }
 
-  _getTemplate(count) {
+  _getTemplate() {
+    return this._createTemplate(this._count);
+  }
+
+  _createTemplate(count) {
     const userRating = createUserRatingItemTemplate(count);
 
     return (
@@ -41,16 +45,5 @@ export default class UserRating {
       ${userRating}
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>`);
-  }
-
-  get element() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate(this._count));
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

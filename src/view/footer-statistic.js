@@ -1,9 +1,9 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract";
 
 
-export default class FooterStatistic {
+export default class FooterStatistic extends AbstractView {
   constructor(filmsCount) {
-    this._element = null;
+    super();
     this._filmsCount = filmsCount;
   }
 
@@ -13,14 +13,4 @@ export default class FooterStatistic {
     );
   }
 
-  get element() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

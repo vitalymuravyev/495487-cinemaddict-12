@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract";
 
 const createCountTemplate = (name, count) => {
   return name !== `all` ? `<span class="main-navigation__item-count">${count}</span>` : ``;
@@ -17,13 +17,17 @@ const createMenuFilterTemplate = ({name, count}, isActive) => {
   );
 };
 
-export default class MainMenu {
+export default class MainMenu extends AbstractView {
   constructor(filters) {
-    this._element = null;
+    super();
     this._filters = filters;
   }
 
-  _getTemplate(filters) {
+  _getTemplate() {
+    return this._createTemplate(this._filters);
+  }
+
+  _createTemplate(filters) {
     const menuFilterTemplate = filters.map((filter, index) => createMenuFilterTemplate(filter, index === 0)).join(``);
     return (
       `<div class="main-navigation__items">
@@ -32,15 +36,4 @@ export default class MainMenu {
     );
   }
 
-  get element() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate(this._filters));
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
