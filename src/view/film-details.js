@@ -27,6 +27,8 @@ export default class FilmInfo extends AbstractView {
   constructor(film) {
     super();
     this._film = film;
+
+    this._exitClick = this._exitClick.bind(this);
   }
 
   _getTemplate() {
@@ -163,6 +165,16 @@ export default class FilmInfo extends AbstractView {
         </form>
       </section>`
     );
+  }
+
+  _exitClick(evt) {
+    evt.preventDefault();
+    this._callback.exitClick();
+  }
+
+  setOnExitClick(callback) {
+    this._callback.exitClick = callback;
+    this.element.querySelector(`.film-details__close-btn`).addEventListener(`click`, this._exitClick);
   }
 
 }

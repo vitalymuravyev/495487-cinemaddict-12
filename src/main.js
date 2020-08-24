@@ -1,4 +1,4 @@
-import {RenderPosition, renderElement} from "./utils";
+import {RenderPosition, renderElement} from "./utils/render";
 
 import UserRatingView from "./view/user-rating";
 import MenuContainerView from "./view/menu-container";
@@ -34,13 +34,13 @@ const siteStatistic = siteBody.querySelector(`.footer__statistics`);
 
 const renderFilmContainer = (movies, container) => {
   const filmsContainerComponent = new FilmsContainerView();
-  renderElement(filmsContainerComponent.element, container, RenderPosition.BEFORE_END);
+  renderElement(filmsContainerComponent, container, RenderPosition.BEFORE_END);
 
   const filmsListComponent = new FilmsListView();
-  renderElement(filmsListComponent.element, filmsContainerComponent.element, RenderPosition.BEFORE_END);
+  renderElement(filmsListComponent, filmsContainerComponent, RenderPosition.BEFORE_END);
 
   if (movies.length === 0) {
-    renderElement(new NoFilmView().element, filmsListComponent.element, RenderPosition.BEFORE_END);
+    renderElement(new NoFilmView(), filmsListComponent, RenderPosition.BEFORE_END);
     return;
   }
 
@@ -54,10 +54,9 @@ const renderFilmContainer = (movies, container) => {
     let filmCounter = FILMS_COUNT_PER_STEP;
 
     const showMoreButtonComponent = new ShowMoreButtonView();
-    renderElement(showMoreButtonComponent.element, filmsContainerComponent.element, RenderPosition.BEFORE_END);
+    renderElement(showMoreButtonComponent, filmsContainerComponent, RenderPosition.BEFORE_END);
 
-    showMoreButtonComponent.element.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    showMoreButtonComponent.setOnButtonClick(() => {
       movies.slice(filmCounter, filmCounter + FILMS_COUNT_PER_STEP)
       .forEach((film) => renderFilm(film, filmsListContainer));
 
@@ -72,7 +71,7 @@ const renderFilmContainer = (movies, container) => {
 
   for (const field of extraFields) {
     const filmsExtraComponent = new FilmsExtraView(field);
-    renderElement(filmsExtraComponent.element, filmsContainerComponent.element, RenderPosition.BEFORE_END);
+    renderElement(filmsExtraComponent, filmsContainerComponent, RenderPosition.BEFORE_END);
   }
   const extraFilmsContainers = filmsContainerComponent.element.querySelectorAll(`.films-list--extra .films-list__container`);
 
@@ -99,27 +98,25 @@ const renderFilm = (film, container) => {
     }
   };
 
-  renderElement(filmComponent.element, container, RenderPosition.BEFORE_END);
+  renderElement(filmComponent, container, RenderPosition.BEFORE_END);
 
-  filmComponent.element
-    .querySelectorAll(`.film-card__poster, .film-card__title, .film-card__comments`)
-    .forEach((filmCard) => filmCard.addEventListener(`click`, onFilmCardClick));
+  filmComponent.setOnCardClick(onFilmCardClick);
 
-  filmInfoComponent.element.querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
+  filmInfoComponent.setOnExitClick(() => {
     siteBody.removeChild(filmInfoComponent.element);
     document.removeEventListener(`keydown`, onEscapePress);
   });
 };
 
-renderElement(new UserRatingView(watchedFilmsCount).element, siteHeader, RenderPosition.BEFORE_END);
+renderElement(new UserRatingView(watchedFilmsCount), siteHeader, RenderPosition.BEFORE_END);
 
 const mainContainerComponent = new MenuContainerView();
-renderElement(mainContainerComponent.element, siteMain, RenderPosition.BEFORE_END);
+renderElement(mainContainerComponent, siteMain, RenderPosition.BEFORE_END);
 
-renderElement(new MainMenuView(filters).element, mainContainerComponent.element, RenderPosition.BEFORE_END);
-renderElement(new MainMenuStatisticView().element, mainContainerComponent.element, RenderPosition.BEFORE_END);
-renderElement(new SortView().element, siteMain, RenderPosition.BEFORE_END);
+renderElement(new MainMenuView(filters), mainContainerComponent, RenderPosition.BEFORE_END);
+renderElement(new MainMenuStatisticView(), mainContainerComponent, RenderPosition.BEFORE_END);
+renderElement(new SortView(), siteMain, RenderPosition.BEFORE_END);
 
 renderFilmContainer(films, siteMain);
 
-renderElement(new FooterStatisticView(films.length).element, siteStatistic, RenderPosition.BEFORE_END);
+renderElement(new FooterStatisticView(films.length), siteStatistic, RenderPosition.BEFORE_END);

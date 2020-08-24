@@ -8,6 +8,8 @@ export default class Film extends AbstractView {
   constructor(film) {
     super();
     this._film = film;
+
+    this._cardClick = this._cardClick.bind(this);
   }
 
   _getTemplate() {
@@ -39,5 +41,16 @@ export default class Film extends AbstractView {
         </form>
       </article>`
     );
+  }
+
+  _cardClick(evt) {
+    evt.preventDefault();
+    this._callback.cardClick();
+  }
+
+  setOnCardClick(callback) {
+    this._callback.cardClick = callback;
+    this.element.querySelectorAll(`.film-card__poster, .film-card__title, .film-card__comments`)
+    .forEach((filmCard) => filmCard.addEventListener(`click`, this._cardClick));
   }
 }
