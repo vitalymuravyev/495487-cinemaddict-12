@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract";
 
 const createGenreItemTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
 
@@ -23,13 +23,19 @@ const createCommentItemTemplate = ({post, author, date, emoji}) => {
   );
 };
 
-export default class FilmInfo {
+export default class FilmInfo extends AbstractView {
   constructor(film) {
-    this._element = null;
+    super();
     this._film = film;
+
+    this._exitClick = this._exitClick.bind(this);
   }
 
-  _getTemplate(film) {
+  _getTemplate() {
+    return this._createTemplate(this._film);
+  }
+
+  _createTemplate(film) {
     const {description, duration, realiseDate, title, originalTitle, rating, comments} = film;
     const {director, country, writers, actors, genre, poster, ageRating, isInWatchList, isWatched, isFavorite} = film;
 
@@ -161,15 +167,14 @@ export default class FilmInfo {
     );
   }
 
-  get element() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate(this._film));
-    }
-
-    return this._element;
+  _exitClick(evt) {
+    evt.preventDefault();
+    this._callback.exitClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setOnExitClick(callback) {
+    this._callback.exitClick = callback;
+    this.element.querySelector(`.film-details__close-btn`).addEventListener(`click`, this._exitClick);
   }
+
 }

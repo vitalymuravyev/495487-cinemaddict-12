@@ -1,16 +1,22 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract";
 
 const MAX_LENGTH = 140;
 
 const addClassName = (property) => property ? `film-card__controls-item--active` : ``;
 
-export default class Film {
+export default class Film extends AbstractView {
   constructor(film) {
-    this._element = null;
+    super();
     this._film = film;
+
+    this._cardClick = this._cardClick.bind(this);
   }
 
-  _getTemplate(film) {
+  _getTemplate() {
+    return this._createTemplate(this._film);
+  }
+
+  _createTemplate(film) {
     const {description, rating, title, realiseYear, duration, genre, comments, poster, isFavorite, isWatched, isInWatchList} = film;
     const shortDescription = description.length >= MAX_LENGTH ? description.slice(0, MAX_LENGTH - 2).concat(`...`) : description;
     const watchListClassName = addClassName(isInWatchList);
@@ -37,14 +43,14 @@ export default class Film {
     );
   }
 
-  get element() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate(this._film));
-    }
-    return this._element;
+  _cardClick(evt) {
+    evt.preventDefault();
+    this._callback.cardClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setOnCardClick(callback) {
+    this._callback.cardClick = callback;
+    this.element.querySelectorAll(`.film-card__poster, .film-card__title, .film-card__comments`)
+    .forEach((filmCard) => filmCard.addEventListener(`click`, this._cardClick));
   }
 }
