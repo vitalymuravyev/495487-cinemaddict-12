@@ -16,8 +16,8 @@ const extraFields = new Set([`Top rated`, `Most commented`]);
 const siteBody = document.querySelector(`body`);
 
 export default class MovieList {
-  constructor(constainer) {
-    this._movieListContainer = constainer;
+  constructor(container) {
+    this._movieListContainer = container;
     this._movieCount = FILMS_COUNT_PER_STEP;
     this._filmCounter = this._movieCount;
 
