@@ -2,18 +2,17 @@ import {RenderPosition, renderElement} from "../utils/render";
 
 import FilmsContainerView from "../view/films-container";
 import FilmsListView from "../view/films-list";
-import FilmView from "../view/film";
 import ShowMoreButtonView from "../view/show-more-button";
 import FilmsExtraView from "../view/films-extra";
-import FilmInfoView from "../view/film-details";
 import NoFilmView from "../view/no_film";
+
+import MoviePresenter from "./movie";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRA_FILMS_COUNT = 2;
 
 const extraFields = new Set([`Top rated`, `Most commented`]);
 
-const siteBody = document.querySelector(`body`);
 
 export default class MovieList {
   constructor(container) {
@@ -55,29 +54,9 @@ export default class MovieList {
   }
 
   _renderMovie(film, container) {
-    const filmComponent = new FilmView(film);
-    const filmInfoComponent = new FilmInfoView(film);
+    const moviePresenter = new MoviePresenter(container);
 
-    const onFilmCardClick = () => {
-      siteBody.appendChild(filmInfoComponent.element);
-      document.addEventListener(`keydown`, onEscapePress);
-    };
-
-    const onEscapePress = (evt) => {
-      if (evt.key === `Escape`) {
-        siteBody.removeChild(filmInfoComponent.element);
-        document.removeEventListener(`keydown`, onEscapePress);
-      }
-    };
-
-    renderElement(filmComponent, container, RenderPosition.BEFORE_END);
-
-    filmComponent.setOnCardClick(onFilmCardClick);
-
-    filmInfoComponent.setOnExitClick(() => {
-      siteBody.removeChild(filmInfoComponent.element);
-      document.removeEventListener(`keydown`, onEscapePress);
-    });
+    moviePresenter.init(film);
   }
 
   _renderMovies(from, to, place) {
