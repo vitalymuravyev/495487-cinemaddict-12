@@ -1,4 +1,5 @@
 import {RenderPosition, renderElement} from "../utils/render";
+import {updateItem} from "../utils";
 
 import FilmsContainerView from "../view/films-container";
 import FilmsListView from "../view/films-list";
@@ -19,6 +20,7 @@ export default class MovieList {
     this._movieListContainer = container;
     this._movieCount = FILMS_COUNT_PER_STEP;
     this._filmCounter = this._movieCount;
+    this._moviePresenter = {};
 
     this._movieContainerComponent = new FilmsContainerView();
     this._movieListComponent = new FilmsListView();
@@ -28,6 +30,8 @@ export default class MovieList {
     this._filmsListContainer = this._movieListComponent.element.querySelector(`.films-list__container`);
 
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
+    this._onMovieChange = this._onMovieChange.bind(this);
+    this._onModeChange = this._onModeChange.bind(this);
   }
 
   init(movies) {
@@ -46,7 +50,7 @@ export default class MovieList {
     }
 
     this._renderMovies(0, Math.min(this._movies.length, this._movieCount), this._filmsListContainer);
-    this._renderExtraMovie();
+    // this._renderExtraMovie();
   }
 
   _renderNoMovie() {
@@ -54,9 +58,10 @@ export default class MovieList {
   }
 
   _renderMovie(film, container) {
-    const moviePresenter = new MoviePresenter(container);
+    const moviePresenter = new MoviePresenter(container, this._onMovieChange, this._onModeChange);
 
     moviePresenter.init(film);
+    this._moviePresenter[film.id] = moviePresenter;
   }
 
   _renderMovies(from, to, place) {
@@ -99,6 +104,17 @@ export default class MovieList {
         this._renderMovie(this._movies[i], extraFilmsContainer);
       }
     });
+  }
+
+  _onMovieChange(updatedMovie) {
+    this._movies = updateItem(this._movies, updatedMovie);
+    this._moviePresenter[updatedMovie.id].init(updatedMovie);
+  }
+
+  _onModeChange() {
+    Object
+      .values(this._moviePresenter)
+      .forEach((presenter) => presenter.closePopup());
   }
 
 }

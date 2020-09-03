@@ -36,3 +36,30 @@ export const renderElement = (template, container, position) => {
       throw new Error(`Wrong element position!`);
   }
 };
+
+export const replace = (newChild, oldChild) => {
+  if (newChild instanceof AbstractView) {
+    newChild = newChild.element;
+  }
+
+  if (oldChild instanceof AbstractView) {
+    oldChild = oldChild.element;
+  }
+
+  const parent = oldChild.parentElement;
+
+  if (parent === null || oldChild === null || newChild === null) {
+    throw new Error(`Can't replace unexisting elements`);
+  }
+
+  parent.replaceChild(newChild, oldChild);
+};
+
+export const remove = (component) => {
+  if (!(component instanceof AbstractView)) {
+    throw new Error(`Can remove only components`);
+  }
+
+  component.element.remove();
+  component.removeElement();
+};

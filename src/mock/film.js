@@ -85,10 +85,13 @@ const getRandomGenres = () => {
   return Array(genresCount).fill(``).map(() => generateRandomItem(ACTIONS));
 };
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const generateFilm = () => {
   const title = generateRandomItem(TITLES);
   const realiseDate = getRandomDate();
   return {
+    id: generateId(),
     poster: generateRandomItem(POSTERS),
     title,
     originalTitle: title.toUpperCase(),

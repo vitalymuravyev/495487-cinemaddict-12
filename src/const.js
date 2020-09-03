@@ -32,7 +32,7 @@ export const POSTERS = [
   `the-man-with-the-golden-arm.jpg`
 ];
 
-export const EMOJIES = [`angry.png`, `puke.png`, `sleeping.png`, `smile.png`];
+export const EMOJIES = [`angry`, `puke`, `sleeping`, `smile`];
 
 export const AUTHORS = [`Tim Macoveev`, `John Doe`, `Kipchoge`, `Jolly Woo`, `Mr Smith`];
 
