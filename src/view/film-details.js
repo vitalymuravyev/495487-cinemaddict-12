@@ -38,6 +38,7 @@ export default class FilmInfo extends SmartView {
     this._watchListClick = this._watchListClick.bind(this);
     this._watchedClick = this._watchedClick.bind(this);
     this._favoriteClick = this._favoriteClick.bind(this);
+    this._onEmojiChange = this._onEmojiChange.bind(this);
 
     this._changeEmoji();
   }
@@ -198,21 +199,19 @@ export default class FilmInfo extends SmartView {
     this._callback.favoriteClick();
   }
 
+  _onEmojiChange(evt) {
+    evt.preventDefault();
+
+    if (this.element.querySelector(`.film-details__add-emoji-label img`)) {
+      this.element.querySelector(`.film-details__add-emoji-label img`).remove();
+    }
+
+    renderTemplate(createEmojiImgtemplate(evt.target.value), this.element.querySelector(`.film-details__add-emoji-label`), RenderPosition.BEFORE_END);
+  }
+
   _changeEmoji() {
-    const element = this.element;
 
-    const onEmojiChange = (evt) => {
-      evt.preventDefault();
-
-      if (element.querySelector(`.film-details__add-emoji-label img`)) {
-        element.querySelector(`.film-details__add-emoji-label img`).remove();
-      }
-
-      renderTemplate(createEmojiImgtemplate(evt.target.value), element.querySelector(`.film-details__add-emoji-label`), RenderPosition.BEFORE_END);
-
-    };
-
-    element.querySelector(`.film-details__emoji-list`).addEventListener(`change`, onEmojiChange);
+    this.element.querySelector(`.film-details__emoji-list`).addEventListener(`change`, this._onEmojiChange);
 
   }
 
@@ -234,10 +233,6 @@ export default class FilmInfo extends SmartView {
   setOnFavoriteClick(callback) {
     this._callback.favoriteClick = callback;
     this.element.querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favoriteClick);
-  }
-
-  restoreHandlers() {
-
   }
 
 }
