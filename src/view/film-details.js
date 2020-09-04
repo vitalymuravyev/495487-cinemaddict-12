@@ -1,15 +1,20 @@
-import AbstractView from "./abstract";
+import SmartView from "./smart";
+
+import {renderTemplate, RenderPosition} from "../utils/render";
 
 const createGenreItemTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
 
 const addChecked = (property) => property ? `checked` : ``;
 
+const createEmojiImgtemplate = (emoji) => `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">`;
+
 const createCommentItemTemplate = ({post, author, date, emoji}) => {
   const formattedDate = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+  const emojiItem = createEmojiImgtemplate(emoji);
   return (
     `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
-        <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji-smile">
+        ${emojiItem}
       </span>
       <div>
         <p class="film-details__comment-text">${post}</p>
@@ -23,12 +28,18 @@ const createCommentItemTemplate = ({post, author, date, emoji}) => {
   );
 };
 
-export default class FilmInfo extends AbstractView {
+export default class FilmInfo extends SmartView {
   constructor(film) {
     super();
     this._film = film;
+    this._isNewEmodji = false;
 
     this._exitClick = this._exitClick.bind(this);
+    this._watchListClick = this._watchListClick.bind(this);
+    this._watchedClick = this._watchedClick.bind(this);
+    this._favoriteClick = this._favoriteClick.bind(this);
+
+    this._changeEmoji();
   }
 
   _getTemplate() {
@@ -172,9 +183,61 @@ export default class FilmInfo extends AbstractView {
     this._callback.exitClick();
   }
 
+  _watchListClick(evt) {
+    evt.preventDefault();
+    this._callback.watchListClick();
+  }
+
+  _watchedClick(evt) {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  }
+
+  _favoriteClick(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  _changeEmoji() {
+    const element = this.element;
+
+    const onEmojiChange = (evt) => {
+      evt.preventDefault();
+
+      if (element.querySelector(`.film-details__add-emoji-label img`)) {
+        element.querySelector(`.film-details__add-emoji-label img`).remove();
+      }
+
+      renderTemplate(createEmojiImgtemplate(evt.target.value), element.querySelector(`.film-details__add-emoji-label`), RenderPosition.BEFORE_END);
+
+    };
+
+    element.querySelector(`.film-details__emoji-list`).addEventListener(`change`, onEmojiChange);
+
+  }
+
   setOnExitClick(callback) {
     this._callback.exitClick = callback;
     this.element.querySelector(`.film-details__close-btn`).addEventListener(`click`, this._exitClick);
+  }
+
+  setOnWatchListClick(callback) {
+    this._callback.watchListClick = callback;
+    this.element.querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._watchListClick);
+  }
+
+  setOnWatchedClick(callback) {
+    this._callback.watchedClick = callback;
+    this.element.querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._watchedClick);
+  }
+
+  setOnFavoriteClick(callback) {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favoriteClick);
+  }
+
+  restoreHandlers() {
+
   }
 
 }
