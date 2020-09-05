@@ -5,7 +5,6 @@ import UserRatingView from "./view/user-rating";
 import MenuContainerView from "./view/menu-container";
 import MainMenuView from "./view/main-menu";
 import MainMenuStatisticView from "./view/menu-statistic";
-import SortView from "./view/sort";
 
 import FooterStatisticView from "./view/footer-statistic";
 
@@ -32,7 +31,6 @@ renderElement(mainContainerComponent, siteMain, RenderPosition.BEFORE_END);
 
 renderElement(new MainMenuView(filters), mainContainerComponent, RenderPosition.BEFORE_END);
 renderElement(new MainMenuStatisticView(), mainContainerComponent, RenderPosition.BEFORE_END);
-renderElement(new SortView(), siteMain, RenderPosition.BEFORE_END);
 
 const movieListPresenter = new MovieListPresenter(siteMain);
 movieListPresenter.init(films);

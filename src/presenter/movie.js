@@ -103,4 +103,9 @@ export default class Movie {
     }
   }
 
+  destroy() {
+    remove(this._filmComponent);
+    remove(this._filmInfoComponent);
+  }
+
 }
