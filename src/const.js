@@ -80,3 +80,9 @@ export const ACTORS = [
 ];
 
 export const COUNTRIES = [`USA`, `Italy`, `France`, `Australia`, `Great Britan`, `Germany`];
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`
+};
