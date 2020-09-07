@@ -1,7 +1,6 @@
 import {getRandom, getRandomInteger, generateRandomItem, getRandomBoolean} from "../utils";
 import {SENTENCES, TITLES, ACTIONS, POSTERS, EMOJIES, AUTHORS, DIRECTORS, WRITERS, ACTORS, COUNTRIES} from "../const";
 
-const MINUTES_IN_HOUR = 60;
 const MAX_SENTENCE = 5;
 const MAX_COMMENTS_COUNT = 5;
 const MAX_DATE_GAP = 25550;
@@ -23,11 +22,7 @@ const GenresCount = {
   MAX: 3,
 };
 
-const getRandomDuration = () => {
-  const duration = getRandomInteger(Duration.MIN, Duration.MAX);
-
-  return duration >= MINUTES_IN_HOUR ? `${Math.trunc(duration / MINUTES_IN_HOUR)}h ${duration % MINUTES_IN_HOUR}m` : `${duration}m`;
-};
+const getRandomDuration = () => getRandomInteger(Duration.MIN, Duration.MAX);
 
 const getRandomDescription = () => {
   const sentenceCount = getRandomInteger(1, MAX_SENTENCE);

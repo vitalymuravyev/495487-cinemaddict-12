@@ -1,4 +1,4 @@
-
+import moment from "moment";
 
 export const getRandom = (a = 1, b = 0) => {
   const lower = Math.min(a, b);
@@ -34,3 +34,35 @@ export const updateItem = (items, update) => {
 export const sortMovieRating = (movie1, movie2) => movie2.rating - movie1.rating;
 
 export const sortMovieDate = (movie1, movie2) => movie2.realiseDate.getTime() - movie1.realiseDate.getTime();
+
+const isDate = (date) => date instanceof Date;
+
+export const formatReleaseDate = (releaseDate) => {
+  if (!isDate(releaseDate)) {
+    return ``;
+  }
+
+  return moment(releaseDate).format(`DD MMMM YYYY`);
+};
+
+export const getReleaseYear = (releaseDate) => {
+  if (!isDate(releaseDate)) {
+    return ``;
+  }
+
+  return moment(releaseDate).format(`YYYY`);
+};
+
+export const formatDuration = (duration) => {
+  const currentDuration = moment.duration(duration, `minutes`);
+
+  return currentDuration.get(`hours`) ? `${currentDuration.get(`hours`)}h ${currentDuration.get(`minutes`)}m` : `${currentDuration.get(`minutes`)}m`;
+};
+
+export const formatCommentDate = (date) => {
+  if (!isDate(date)) {
+    return ``;
+  }
+
+  return moment(date).fromNow();
+};
