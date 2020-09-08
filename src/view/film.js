@@ -1,5 +1,7 @@
 import AbstractView from "./abstract";
 
+import {getReleaseYear, formatDuration} from "../utils";
+
 const MAX_LENGTH = 140;
 
 const addClassName = (property) => property ? `film-card__controls-item--active` : ``;
@@ -20,18 +22,20 @@ export default class Film extends AbstractView {
   }
 
   _createTemplate(film) {
-    const {description, rating, title, realiseYear, duration, genre, comments, poster, isFavorite, isWatched, isInWatchList} = film;
+    const {description, rating, title, realiseDate, duration, genre, comments, poster, isFavorite, isWatched, isInWatchList} = film;
     const shortDescription = description.length >= MAX_LENGTH ? description.slice(0, MAX_LENGTH - 2).concat(`...`) : description;
     const watchListClassName = addClassName(isInWatchList);
     const watchedClassName = addClassName(isWatched);
     const favoriteClassName = addClassName(isFavorite);
+    const releaseYear = getReleaseYear(realiseDate);
+    const formattedDuration = formatDuration(duration);
     return (
       `<article class="film-card">
         <h3 class="film-card__title">${title}</h3>
         <p class="film-card__rating">${rating}</p>
         <p class="film-card__info">
-          <span class="film-card__year">${realiseYear}</span>
-          <span class="film-card__duration">${duration}</span>
+          <span class="film-card__year">${releaseYear}</span>
+          <span class="film-card__duration">${formattedDuration}</span>
           <span class="film-card__genre">${genre}</span>
         </p>
         <img src="./images/posters/${poster}" alt="" class="film-card__poster">

@@ -1,6 +1,7 @@
 import SmartView from "./smart";
 
 import {renderTemplate, RenderPosition} from "../utils/render";
+import {formatReleaseDate, formatDuration, formatCommentDate} from "../utils";
 
 const createGenreItemTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
 
@@ -9,7 +10,7 @@ const addChecked = (property) => property ? `checked` : ``;
 const createEmojiImgtemplate = (emoji) => `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">`;
 
 const createCommentItemTemplate = ({post, author, date, emoji}) => {
-  const formattedDate = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+  const formattedDate = formatCommentDate(date);
   const emojiItem = createEmojiImgtemplate(emoji);
   return (
     `<li class="film-details__comment">
@@ -51,7 +52,8 @@ export default class FilmInfo extends SmartView {
     const {description, duration, realiseDate, title, originalTitle, rating, comments} = film;
     const {director, country, writers, actors, genre, poster, ageRating, isInWatchList, isWatched, isFavorite} = film;
 
-    const date = realiseDate.toLocaleString(`en-GB`, {day: `numeric`, month: `long`, year: `numeric`});
+    const date = formatReleaseDate(realiseDate);
+    const formattedDuration = formatDuration(duration);
     const genreTitle = genre.length > 1 ? `Genres` : `Genre`;
     const genreItemsTemplate = genre.map((item) => createGenreItemTemplate(item)).join(``);
     const watchListChecked = addChecked(isInWatchList);
@@ -104,7 +106,7 @@ export default class FilmInfo extends SmartView {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Runtime</td>
-                    <td class="film-details__cell">${duration}</td>
+                    <td class="film-details__cell">${formattedDuration}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Country</td>
